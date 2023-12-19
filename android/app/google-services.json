@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "605759128200",
+    "project_id": "qualificationmg",
+    "storage_bucket": "qualificationmg.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:605759128200:android:6e8a4b2627ced973f8953d",
+        "android_client_info": {
+          "package_name": "com.example.qualificationmg"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyASwye-zOZe2lOLJDIUbI5xT3JsEu0BmEs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
