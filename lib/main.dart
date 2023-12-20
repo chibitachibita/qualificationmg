@@ -1,11 +1,13 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:qualificationmg/firebase_options.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -61,69 +63,79 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
+  //入力されたメールアドレスを入れるデータ
+  String newUserEmail = '';
+  //入力されたパスワードを入れるデータ
+  String newUserPassword = '';
+  // 登録・ログインに関する情報を表示するデータ
+  String infoText = '';
+
   void _incrementCounter() {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
       _counter++;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          title: Text(widget.title),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
+        body: Center(
+          child: Container(
+            padding: EdgeInsets.all(8),
+            child: Column(
+              children: [
+                //Emailアドレスを入力するテキストラベルを作成する
+                TextField(
+                  decoration: InputDecoration(labelText: "Email"),
+                  onChanged: (String value) => setState(() {
+                    newUserEmail = value;
+                  }),
+                ),
+                //スペースを空ける
+                const SizedBox(height: 8),
+                //パスワードを入力するテキストラベルを作成する
+                TextField(
+                  decoration: InputDecoration(labelText: "Password"),
+                  //パスワードが見えないように設定する
+                  obscureText: true,
+                  onChanged: (String value) => setState(() {
+                    newUserPassword = value;
+                  }),
+                ),
+                //スペースを空ける
+                const SizedBox(height: 8),
+                //このボタンを押すとfirebaseにユーザー情報が登録される
+                ElevatedButton(
+                  // Firebaseと通信するのでasyncが必要
+                  onPressed: () async {
+                    //ユーザー登録が無事Firebaseに登録できた場合の処理
+                    try {
+                      final FirebaseAuth auth = FirebaseAuth.instance;
+                      final UserCredential result =
+                          await auth.createUserWithEmailAndPassword(
+                        email: newUserEmail,
+                        password: newUserPassword,
+                      );
+
+                      final User user = result.user!;
+                      setState(() {
+                        infoText = "ユーザー登録を完了しました。登録したメールアドレスは${user.email}です";
+                      });
+                    } catch (e) {
+                      setState(() {
+                        infoText = "ユーザー登録時にエラーが発生しました";
+                      });
+                    }
+                  },
+                  child: Text('Sign Up'),
+                ),
+              ],
+            ),
+          ),
+        ));
   }
 }
