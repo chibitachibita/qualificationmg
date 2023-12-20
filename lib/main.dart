@@ -70,6 +70,9 @@ class _MyHomePageState extends State<MyHomePage> {
   // 登録・ログインに関する情報を表示するデータ
   String infoText = '';
 
+  String loginUserEmail = '';
+  String loginUserPassword = '';
+
   void _incrementCounter() {
     setState(() {
       _counter++;
@@ -133,6 +136,46 @@ class _MyHomePageState extends State<MyHomePage> {
                   },
                   child: Text('Sign Up'),
                 ),
+                Text("Login"),
+                TextField(
+                  decoration: InputDecoration(labelText: "Email"),
+                  onChanged: (String value) => setState(() {
+                    loginUserEmail = value;
+                  }),
+                ),
+                const SizedBox(height: 8),
+                TextField(
+                  decoration: InputDecoration(labelText: "Password"),
+                  obscureText: true,
+                  onChanged: (String value) => setState(() {
+                    loginUserPassword = value;
+                  }),
+                ),
+                const SizedBox(height: 8),
+                ElevatedButton(
+                  onPressed: () async {
+                    try {
+                      final FirebaseAuth auth = FirebaseAuth.instance;
+                      final UserCredential result =
+                          await auth.signInWithEmailAndPassword(
+                        email: loginUserEmail,
+                        password: loginUserPassword,
+                      );
+
+                      final User user = result.user!;
+                      setState(() {
+                        infoText = "ログインに成功しました。ログインメールアドレスは${user.email}です";
+                      });
+                    } catch (e) {
+                      setState(() {
+                        infoText = 'ログイン時にエラーが発生しました';
+                      });
+                    }
+                  },
+                  child: Text('Login'),
+                ),
+                const SizedBox(height: 8),
+                Text(infoText),
               ],
             ),
           ),
