@@ -2,7 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:qualificationmg/firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
+// import 'package:firebase_core/firebase_core.dart'; --
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -61,8 +61,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
   //入力されたメールアドレスを入れるデータ
   String newUserEmail = '';
   //入力されたパスワードを入れるデータ
@@ -74,9 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
   String loginUserPassword = '';
 
   void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
+    setState(() {});
   }
 
   @override
