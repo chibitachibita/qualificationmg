@@ -6,10 +6,10 @@ class QualificationmgTopPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text('上に表示される'),
+        title: Text('MyPage'),
       ),
       body: Center(
-        child: Text('まんなか'),
+        child: Text('開発ちう'),
       ),
     );
   }

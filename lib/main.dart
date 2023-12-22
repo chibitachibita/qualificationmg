@@ -17,9 +17,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'てすとめいん',
+      title: '考えちう',
       darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Login'),
     );
   }
 }
@@ -99,7 +99,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   },
                   child: Text('Sign Up'),
                 ),
-                Text("Login"),
                 TextField(
                   decoration: InputDecoration(labelText: "Email"),
                   onChanged: (String value) => setState(() {
@@ -115,19 +114,15 @@ class _MyHomePageState extends State<MyHomePage> {
                   }),
                 ),
                 const SizedBox(height: 8),
+                TextButton(
+                  onPressed: () {
+                    // ボタンが押されたときに発動される処理
+                  },
+                  child: Text('ユーザー情報修正'),
+                ),
                 ElevatedButton(
                   onPressed: () async {
                     try {
-                      final FirebaseAuth auth = FirebaseAuth.instance;
-                      final UserCredential result =
-                          await auth.signInWithEmailAndPassword(
-                        email: loginUserEmail,
-                        password: loginUserPassword,
-                      );
-                      final User user = result.user!;
-                      setState(() {
-                        infoText = "ログインに成功しました。ログインメールアドレスは${user.email}です";
-                      });
                       Navigator.push(
                         context,
                         MaterialPageRoute(
