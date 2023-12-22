@@ -18,10 +18,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'てすとめいん',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
+      darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
@@ -127,21 +124,20 @@ class _MyHomePageState extends State<MyHomePage> {
                         email: loginUserEmail,
                         password: loginUserPassword,
                       );
-
                       final User user = result.user!;
                       setState(() {
                         infoText = "ログインに成功しました。ログインメールアドレスは${user.email}です";
                       });
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => QualificationmgTopPage()),
+                      );
                     } catch (e) {
                       setState(() {
                         infoText = 'ログイン時にエラーが発生しました';
                       });
                     }
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => QualificationmgTopPage()),
-                    );
                   },
                   child: Text('Login'),
                 ),
