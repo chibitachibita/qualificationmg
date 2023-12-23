@@ -3,7 +3,6 @@ import 'package:qualificationmg/importer.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:qualificationmg/firebase_options.dart';
-// import 'package:firebase_core/firebase_core.dart';
 import 'view/qualificationmgTopPage.dart';
 
 void main() async {
