@@ -31,6 +31,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  String resultText = '';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,9 +68,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 ElevatedButton(
                   // Firebaseと通信するのでasyncが必要
                   onPressed: () async {
-                    Future<String?> infoText = firebaseRegist();
+                    resultText = firebaseRegist() as String;
                     setState(() {
-                      infoText;
+                      resultText;
                     });
                   },
                   child: Text('Sign Up'),
@@ -97,8 +98,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 ElevatedButton(
                   onPressed: () async {
-                    Future<String?> infoText = firebaseRegist();
-                    if (infoText == '') {
+                    resultText = firebaseLogin() as String;
+                    if (resultText == '') {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -106,13 +107,14 @@ class _MyHomePageState extends State<MyHomePage> {
                       );
                     } else {
                       setState(() {
-                        infoText;
+                        resultText;
                       });
                     }
                   },
                   child: Text('Login'),
                 ),
                 const SizedBox(height: 8),
+                Text(resultText),
               ],
             ),
           ),
