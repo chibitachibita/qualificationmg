@@ -31,8 +31,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String infoText = '';
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -106,12 +104,15 @@ class _MyHomePageState extends State<MyHomePage> {
                         MaterialPageRoute(
                             builder: (context) => QualificationmgTopPage()),
                       );
+                    } else {
+                      setState(() {
+                        infoText;
+                      });
                     }
                   },
                   child: Text('Login'),
                 ),
                 const SizedBox(height: 8),
-                Text(infoText),
               ],
             ),
           ),
