@@ -72,7 +72,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 //スペースを空ける
                 const SizedBox(height: 8),
-                //このボタンを押すとfirebaseにユーザー情報が登録される
+
+                // ユーザー登録機能
                 ElevatedButton(
                   // Firebaseと通信するのでasyncが必要
                   onPressed: () async {
@@ -111,8 +112,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     loginUserPassword = value;
                   }),
                 ),
-                // ログイン機能
                 const SizedBox(height: 8),
+
+                // ログイン機能
                 ElevatedButton(
                   onPressed: () async {
                     try {
