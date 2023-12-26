@@ -1,9 +1,9 @@
-import 'package:qualificationmg/firebase/firebase.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:qualificationmg/importer.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:qualificationmg/firebase_options.dart';
-import 'view/qualificationmgTopPage.dart';
+// import 'view/qualificationmgTopPage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,8 +17,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: '考えちう',
+      theme: ThemeData(useMaterial3: true, colorScheme: lightColorScheme),
       darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
-      home: const MyHomePage(title: 'Login'),
+      home: const MyHomePage(
+        title: 'Login',
+      ),
     );
   }
 }
@@ -31,7 +34,12 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String resultText = '';
+  String newUserEmail = '';
+  String newUserPassword = '';
+  String loginUserEmail = '';
+  String loginUserPassword = '';
+  String infoText = '';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,10 +76,24 @@ class _MyHomePageState extends State<MyHomePage> {
                 ElevatedButton(
                   // Firebaseと通信するのでasyncが必要
                   onPressed: () async {
-                    resultText = firebaseRegist() as String;
-                    setState(() {
-                      resultText;
-                    });
+                    //ユーザー登録が無事Firebaseに登録できた場合の処理
+                    try {
+                      final FirebaseAuth auth = FirebaseAuth.instance;
+                      final UserCredential result =
+                          await auth.createUserWithEmailAndPassword(
+                        email: newUserEmail,
+                        password: newUserPassword,
+                      );
+
+                      final User user = result.user!;
+                      setState(() {
+                        infoText = "ユーザー登録を完了しました。登録したメールアドレスは${user.email}です";
+                      });
+                    } catch (e) {
+                      setState(() {
+                        infoText = "ユーザー登録時にエラーが発生しました";
+                      });
+                    }
                   },
                   child: Text('Sign Up'),
                 ),
@@ -89,32 +111,32 @@ class _MyHomePageState extends State<MyHomePage> {
                     loginUserPassword = value;
                   }),
                 ),
+                // ログイン機能
                 const SizedBox(height: 8),
-                TextButton(
-                  onPressed: () {
-                    // ボタンが押されたときに発動される処理
-                  },
-                  child: Text('ユーザー情報修正'),
-                ),
                 ElevatedButton(
                   onPressed: () async {
-                    resultText = firebaseLogin() as String;
-                    if (resultText == '') {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => QualificationmgTopPage()),
+                    try {
+                      final FirebaseAuth auth = FirebaseAuth.instance;
+                      final UserCredential result =
+                          await auth.signInWithEmailAndPassword(
+                        email: loginUserEmail,
+                        password: loginUserPassword,
                       );
-                    } else {
+
+                      final User user = result.user!;
                       setState(() {
-                        resultText;
+                        infoText = "ログインに成功しました。ログインメールアドレスは${user.email}です";
+                      });
+                    } catch (e) {
+                      setState(() {
+                        infoText = 'ログイン時にエラーが発生しました';
                       });
                     }
                   },
                   child: Text('Login'),
                 ),
                 const SizedBox(height: 8),
-                Text(resultText),
+                Text(infoText),
               ],
             ),
           ),
