@@ -68,12 +68,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 onPressed: () {
                   // _signIn(ref, idController.text, passController.text);
                 },
-                style: ButtonStyle(
-                    padding: MaterialStateProperty.all(
-                        EdgeInsets.zero), // パディングをゼロに設定
-                    tapTargetSize:
-                        MaterialTapTargetSize.shrinkWrap, // ボタンのサイズを内容に合わせる
-                    backgroundColor: MaterialStateProperty.all(Colors.grey)),
                 child: const Text('サインイン'),
               ),
             ),
