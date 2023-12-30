@@ -77,6 +77,24 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: const Text('サインイン'),
               ),
             ),
+
+            // アカウント作成
+            Container(
+              margin: const EdgeInsets.all(10),
+              child: ElevatedButton(
+                onPressed: () {
+                  // _createAccount(ref, idController.text, passController.text);
+                },
+                child: const Text('アカウント作成'),
+              ),
+            ),
+
+            // サインアウト
+            TextButton(
+                onPressed: () {
+                  // _signOut(ref);
+                },
+                child: const Text('SIGN OUT'))
           ],
         ));
   }
