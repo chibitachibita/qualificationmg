@@ -47,6 +47,7 @@ class MyHomePage extends ConsumerStatefulWidget {
 class _MyHomePageState extends ConsumerState<MyHomePage> {
   @override
   Widget build(BuildContext context) {
+    final singInStatus = ref.watch(signInStateProvider);
     final idController = TextEditingController();
     final passController = TextEditingController();
 
@@ -77,6 +78,12 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
               obscureText: true,
             ),
 
+            // サインインのメッセージ表示
+            Container(
+              padding: const EdgeInsets.all(10),
+              child: Text(singInStatus),
+            ),
+
             // サインイン
             TextButton(
               onPressed: () {
@@ -88,7 +95,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
             // アカウント作成
             TextButton(
               onPressed: () {
-                _createAccount(ref, idController.text, passController.text);
+                // _createAccount(ref, idController.text, passController.text);
               },
               child: const Text('CREATE ACCOUNT'),
             ),
@@ -105,7 +112,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
 }
 
 // Authのサインイン状態のprovider
-final signInStateProvider = StateProvider((ref) => 'サインインまたはアカウントを作成してください');
+final signInStateProvider = StateProvider((ref) => 'サインイン、またはアカウントを作成してください。');
 
 // サインインユーザーの情報プロバイダー
 final userProvider = StateProvider<User?>((ref) => null);
@@ -121,23 +128,24 @@ void _signIn(WidgetRef ref, String id, String pass) async {
     );
     // ユーザ情報の更新
     ref.watch(userProvider.state).state = credential.user;
-    // 画面に表示
-    ref.read(signInStateProvider.state).state = 'サインインできました!';
   } on FirebaseAuthException catch (e) {
     // サインイン失敗時エラー処理
+    if (e.code == 'invalid-email') {
+      ref.read(signInStateProvider.state).state = 'メールアドレスが無効です';
+    }
   }
 }
 
-// アカウント作成
-void _createAccount(WidgetRef ref, String id, String pass) async {
-  try {
-    /// credential にはアカウント情報が記録される
-    final credential =
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
-      email: id,
-      password: pass,
-    );
-  } on FirebaseAuthException catch (e) {
-    // アカウント作成時エラー処理
-  }
-}
+// // アカウント作成
+// void _createAccount(WidgetRef ref, String id, String pass) async {
+//   try {
+//     /// credential にはアカウント情報が記録される
+//     final credential =
+//         await FirebaseAuth.instance.createUserWithEmailAndPassword(
+//       email: id,
+//       password: pass,
+//     );
+//   } on FirebaseAuthException catch (e) {
+//     // アカウント作成時エラー処理
+//   }
+// }
