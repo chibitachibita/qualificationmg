@@ -95,7 +95,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
             // アカウント作成
             TextButton(
               onPressed: () {
-                // _createAccount(ref, idController.text, passController.text);
+                _createAccount(ref, idController.text, passController.text);
               },
               child: const Text('CREATE ACCOUNT'),
             ),
@@ -129,23 +129,37 @@ void _signIn(WidgetRef ref, String id, String pass) async {
     // ユーザ情報の更新
     ref.watch(userProvider.state).state = credential.user;
   } on FirebaseAuthException catch (e) {
-    // サインイン失敗時エラー処理
-    if (e.code == 'invalid-email') {
-      ref.read(signInStateProvider.state).state = 'メールアドレスが無効です';
-    }
+    // エラー処理
+    _errFirebase(e.code, ref);
   }
 }
 
-// // アカウント作成
-// void _createAccount(WidgetRef ref, String id, String pass) async {
-//   try {
-//     /// credential にはアカウント情報が記録される
-//     final credential =
-//         await FirebaseAuth.instance.createUserWithEmailAndPassword(
-//       email: id,
-//       password: pass,
-//     );
-//   } on FirebaseAuthException catch (e) {
-//     // アカウント作成時エラー処理
-//   }
-// }
+// アカウント作成
+void _createAccount(WidgetRef ref, String id, String pass) async {
+  try {
+    /// credential にはアカウント情報が記録される
+    final credential =
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: id,
+      password: pass,
+    );
+  } on FirebaseAuthException catch (e) {
+    // エラー処理
+    _errFirebase(e.code, ref);
+  }
+}
+
+// firebaseエラー
+void _errFirebase(String code, WidgetRef ref) {
+  switch (code) {
+    case 'invalid-email':
+      ref.read(signInStateProvider.state).state = 'メールアドレスが無効です';
+      break;
+    case 'email-already-exists':
+      ref.read(signInStateProvider.state).state = '登録済みのメールアドレスです';
+      break;
+    case 'invalid-password':
+      ref.read(signInStateProvider.state).state = 'パスワードは6文字以上を設定してください';
+      break;
+  }
+}
