@@ -1,6 +1,8 @@
 import 'package:qualificationmg/importer.dart';
 import 'dart:async';
 
+import 'package:qualificationmg/view/qualificationmgTopPage.dart';
+
 void main() async {
   // クラッシュハンドラ
   runZonedGuarded<Future<void>>(() async {
@@ -87,7 +89,12 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
             // サインイン
             TextButton(
               onPressed: () {
-                _signIn(ref, idController.text, passController.text);
+                _signIn(ref, idController.text, passController.text, context);
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //       builder: (context) => QualificationmgTopPage()),
+                // );
               },
               child: const Text('SIGN IN'),
             ),
@@ -119,15 +126,25 @@ final userProvider = StateProvider<User?>((ref) => null);
 final userEmailProvider = StateProvider<String>((ref) => 'ログインしていません');
 
 // サインイン処理
-void _signIn(WidgetRef ref, String id, String pass) async {
+void _signIn(
+    WidgetRef ref, String id, String pass, BuildContext context) async {
   try {
-    /// credential にはアカウント情報が記録される
+    // credential にはアカウント情報が記録される
     final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
       email: id,
       password: pass,
     );
+    // 非同期処理後にBuildContextをチェック
+    // if (!mounted) return;
+
     // ユーザ情報の更新
     ref.watch(userProvider.state).state = credential.user;
+
+    // ページ遷移（ホーム画面だからpushReplacement）
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => QualificationmgTopPage()),
+    );
   } on FirebaseAuthException catch (e) {
     // エラー処理
     _errFirebase(e.code, ref);
@@ -143,6 +160,9 @@ void _createAccount(WidgetRef ref, String id, String pass) async {
       email: id,
       password: pass,
     );
+    // ユーザ情報の更新
+    ref.watch(userProvider.state).state = credential.user;
+    ref.read(signInStateProvider.state).state = 'アカウントを作成しました';
   } on FirebaseAuthException catch (e) {
     // エラー処理
     _errFirebase(e.code, ref);
