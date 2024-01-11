@@ -1,7 +1,8 @@
 import 'package:qualificationmg/importer.dart';
 import 'dart:async';
 
-import 'package:qualificationmg/view/qualificationmgTopPage.dart';
+import 'package:qualificationmg/view/userTopPage.dart';
+import 'package:qualificationmg/view/createAccountPage.dart';
 
 void main() async {
   // クラッシュハンドラ
@@ -64,7 +65,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
             // メールアドレス入力
             TextField(
               decoration: const InputDecoration(
-                label: Text('mail'),
+                label: Text('Mail'),
                 icon: Icon(Icons.mail),
               ),
               controller: idController,
@@ -97,7 +98,14 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
             // アカウント作成
             TextButton(
               onPressed: () {
-                _createAccount(ref, idController.text, passController.text);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const CreateAccountPage(
+                            title: 'Create Account',
+                          )),
+                );
+                // _createAccount(ref, idController.text, passController.text);
               },
               child: const Text('CREATE ACCOUNT'),
             ),
@@ -138,26 +146,8 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
       // ページ遷移（ホーム画面だからpushReplacement）
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => QualificationmgTopPage()),
+        MaterialPageRoute(builder: (context) => UserTopPage()),
       );
-    } on FirebaseAuthException catch (e) {
-      // エラー処理
-      _errFirebase(e.code, ref);
-    }
-  }
-
-// アカウント作成
-  void _createAccount(WidgetRef ref, String id, String pass) async {
-    try {
-      // credential にはアカウント情報が記録される
-      final credential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: id,
-        password: pass,
-      );
-      // ユーザ情報の更新
-      ref.watch(userProvider.state).state = credential.user;
-      ref.read(signInStateProvider.state).state = 'アカウントを作成しました';
     } on FirebaseAuthException catch (e) {
       // エラー処理
       _errFirebase(e.code, ref);

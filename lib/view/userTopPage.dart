@@ -1,6 +1,6 @@
 import 'package:qualificationmg/importer.dart';
 
-class QualificationmgTopPage extends StatelessWidget {
+class UserTopPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
